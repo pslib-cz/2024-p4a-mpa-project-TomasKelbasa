@@ -9,5 +9,6 @@ data class Book(
     val title: String,
     val author: String,
     val pages: Int,
+    val description: String? = null,
     val rating: Int
 )
