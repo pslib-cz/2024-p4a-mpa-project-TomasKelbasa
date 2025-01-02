@@ -5,12 +5,15 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Dao
 interface BookshelfDao{
     @Query("SELECT * FROM books")
     suspend fun getAllBooks(): List<Book>
+    @Query("SELECT * FROM books")
+    fun getAllBooksFlow(): Flow<List<Book>>
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<Category>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
