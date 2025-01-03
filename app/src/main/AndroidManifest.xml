@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddBookActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
-
+        </activity>
+        <activity android:name=".BookDetailActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
         </activity>
     </application>
 

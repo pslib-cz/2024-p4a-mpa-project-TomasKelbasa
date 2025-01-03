@@ -42,6 +42,14 @@ interface BookshelfDao{
     @Transaction
     @Query("SELECT * FROM categories")
     suspend fun getAllCategoriesWithBooks(): List<CategoryWithBooks>
+
+    @Query("""
+        SELECT * FROM books 
+        INNER JOIN bookCategoryCrossRef 
+        ON books.bookId = bookCategoryCrossRef.bookId 
+        WHERE bookCategoryCrossRef.categoryId = :categoryId
+    """)
+    suspend fun getBooksByCategory(categoryId: Long): List<Book>
 }
 
 @Database(

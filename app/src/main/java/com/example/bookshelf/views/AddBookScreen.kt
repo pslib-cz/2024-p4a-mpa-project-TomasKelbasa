@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.bookshelf.data.Book
-import com.example.bookshelf.data.BookWithCategories
 import com.example.bookshelf.data.Category
 
 @OptIn(ExperimentalMaterial3Api::class)
