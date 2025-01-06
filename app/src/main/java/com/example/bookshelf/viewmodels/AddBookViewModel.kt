@@ -31,6 +31,12 @@ class AddBookViewModel(application: Application) : AndroidViewModel(application)
         return categories
     }
 
+    internal fun validate(book: Book): Boolean{
+        if (book.title.isEmpty()) return false
+        if (book.author.isEmpty()) return false
+        return true
+    }
+
     internal fun addBook(book: Book, categoryIds: List<Long>){
         viewModelScope.launch {
             val bookId = dao.insertBook(book)

@@ -1,7 +1,7 @@
 package com.example.bookshelf.views
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.bookshelf.data.Book
@@ -54,8 +55,11 @@ fun AddBookScreen(
             )
             TextField(
                 value = pages,
-                onValueChange = { pages = it },
-                label = { Text("Pages") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    if(it.text.isEmpty() || it.text.matches(Regex("\\d*"))) pages = it
+                },
+                label = { Text("Number of pages") },
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
@@ -66,8 +70,11 @@ fun AddBookScreen(
             )
             TextField(
                 value = rating,
-                onValueChange = { rating = it },
-                label = { Text("Rating (1-5)") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                onValueChange = {
+                    if(it.text.isEmpty() || it.text.matches(Regex("[0-5]"))) rating = it
+                },
+                label = { Text("Rating (0-5)") },
                 modifier = Modifier.fillMaxWidth()
             )
             Text("Categories", style = MaterialTheme.typography.titleMedium)

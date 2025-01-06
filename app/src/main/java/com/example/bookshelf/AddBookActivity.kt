@@ -24,9 +24,14 @@ class AddBookActivity : ComponentActivity() {
                 AddBookScreen(
                     categories = categories,
                     onSaveBook = { book, categoryIds ->
-                        viewModel.addBook(book, categoryIds)
-                        Toast.makeText(this, "Book added!", Toast.LENGTH_SHORT).show()
-                        finish()
+                        if (!viewModel.validate(book)){
+                            Toast.makeText(this, "Invalid book", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            viewModel.addBook(book, categoryIds)
+                            Toast.makeText(this, "Book added!", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
                     }
                 )
             }

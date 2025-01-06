@@ -1,5 +1,6 @@
 package com.example.bookshelf
 
+import android.content.ContentProvider
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -44,6 +45,8 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private lateinit var db: BookshelfDatabase
     private lateinit var dao: BookshelfDao
+    private var _books = mutableStateOf<List<Book>>(emptyList())
+    private var _selectedCategory = mutableStateOf<Category?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +57,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BookshelfTheme {
-                var books by remember { mutableStateOf<List<Book>>(emptyList()) }
-                var selectedCategory by remember { mutableStateOf<Category?>(null) }
+                var books by remember { _books }
+                var selectedCategory by remember { _selectedCategory }
                 var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
 
                 LaunchedEffect(Unit) {
@@ -103,15 +106,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Update _books on resume (book may have been deleted or added)
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val dao = db.bookshelfDao()
 
-    private fun logBooksWithCategories(booksWithCategories: List<BookWithCategories>) {
-        booksWithCategories.forEach { bookWithCategories ->
-            Log.d(
-                "Bookshelf",
-                "Book: ${bookWithCategories.book.title}, Categories: ${
-                    bookWithCategories.categories.joinToString { it.name }
-                }"
-            )
+            if(_selectedCategory.value == null) {
+                _books.value = dao.getAllBooks()
+            }
+            else {
+                _books.value = dao.getBooksByCategory(_selectedCategory.value!!.categoryId)
+            }
         }
     }
 }
