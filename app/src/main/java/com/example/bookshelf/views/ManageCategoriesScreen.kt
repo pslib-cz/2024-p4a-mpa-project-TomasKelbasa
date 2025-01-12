@@ -87,7 +87,7 @@ fun ManageCategoriesScreen(
                             onAddCategory(newCategoryName)
                             newCategoryName = ""
                         },
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
                     ) {
                         Text("Add")
                     }

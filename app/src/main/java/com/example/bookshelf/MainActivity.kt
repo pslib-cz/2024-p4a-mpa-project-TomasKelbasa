@@ -107,7 +107,6 @@ class MainActivity : ComponentActivity() {
                                     Icon(
                                         imageVector = Icons.Default.Settings,
                                         contentDescription = "Settings",
-                                        tint = Color.Black,
                                         modifier = Modifier.padding(0.dp).background(Color.Transparent)
                                     )
                                 }

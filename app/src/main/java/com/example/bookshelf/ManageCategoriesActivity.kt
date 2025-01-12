@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.example.bookshelf.data.*
+import com.example.bookshelf.ui.theme.BookshelfTheme
 import com.example.bookshelf.views.ManageCategoriesScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,23 +31,25 @@ class ManageCategoriesActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 categories = loadCategories()
             }
-            ManageCategoriesScreen(
-                categories = categories,
-                onAddCategory = { name ->
-                    lifecycleScope.launch {
-                        if (name.isNotBlank()) {
-                            addCategory(name)
+            BookshelfTheme {
+                ManageCategoriesScreen(
+                    categories = categories,
+                    onAddCategory = { name ->
+                        lifecycleScope.launch {
+                            if (name.isNotBlank()) {
+                                addCategory(name)
+                                categories = loadCategories()
+                            }
+                        }
+                    },
+                    onDeleteCategory = { category ->
+                        lifecycleScope.launch {
+                            deleteCategory(category)
                             categories = loadCategories()
                         }
                     }
-                },
-                onDeleteCategory = { category ->
-                    lifecycleScope.launch {
-                        deleteCategory(category)
-                        categories = loadCategories()
-                    }
-                }
-            )
+                )
+            }
         }
     }
 

@@ -8,23 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.lifecycleScope
-import com.example.bookshelf.data.Book
-import com.example.bookshelf.data.BookWithCategories
-import com.example.bookshelf.data.BookshelfDatabase
-import com.example.bookshelf.data.Category
 import com.example.bookshelf.ui.theme.BookshelfTheme
 import com.example.bookshelf.viewmodels.EditBookViewModel
 import com.example.bookshelf.views.EditBookScreen
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class EditBookActivity : ComponentActivity() {
