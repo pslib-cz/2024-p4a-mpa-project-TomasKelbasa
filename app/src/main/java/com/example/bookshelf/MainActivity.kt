@@ -1,23 +1,30 @@
 package com.example.bookshelf
 
-import android.content.ContentProvider
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +55,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var dao: BookshelfDao
     private var _books = mutableStateOf<List<Book>>(emptyList())
     private var _selectedCategory = mutableStateOf<Category?>(null)
+    private var _categories = mutableStateOf<List<Category>>(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +68,7 @@ class MainActivity : ComponentActivity() {
             BookshelfTheme {
                 var books by remember { _books }
                 var selectedCategory by remember { _selectedCategory }
-                var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
+                var categories by remember { _categories }
 
                 LaunchedEffect(Unit) {
                     lifecycleScope.launch {
@@ -69,19 +78,40 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    modifier = Modifier.fillMaxSize().padding(5.dp, 45.dp, 5.dp, 5.dp),
+                    modifier = Modifier.fillMaxSize()
                     ) { innerPadding ->
-                    Box(modifier = Modifier.fillMaxSize()){
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)
+                    ) {
                         FloatingActionButton(
                             onClick = {
                                 startActivity(Intent(this@MainActivity, AddBookActivity::class.java))
                             },
                             modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp).zIndex(100.0f)
                         ){
-                            Text("+", fontSize = 30.sp)
+                            Icon(imageVector = Icons.Default.Add, "Add new book")
                         }
                         Column {
-                            Text(text = "My Bookshelf", style = MaterialTheme.typography.headlineLarge)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(text = "My Bookshelf", style = MaterialTheme.typography.headlineLarge)
+                                IconButton(
+                                    onClick = {
+                                        startActivity(Intent(this@MainActivity, ManageCategoriesActivity::class.java))
+                                    },
+                                    modifier = Modifier.padding(0.dp).background(Color.Transparent)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Settings,
+                                        contentDescription = "Settings",
+                                        tint = Color.Black,
+                                        modifier = Modifier.padding(0.dp).background(Color.Transparent)
+                                    )
+                                }
+                            }
                             CategoryFilterDropdown(
                                 categories = categories,
                                 selectedCategory = selectedCategory,
@@ -107,10 +137,12 @@ class MainActivity : ComponentActivity() {
     }
 
     // Update _books on resume (book may have been deleted or added)
+    // Update _categories on resume (category may have been deleted or added)
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
             val dao = db.bookshelfDao()
+            _categories.value = dao.getAllCategories()
 
             if(_selectedCategory.value == null) {
                 _books.value = dao.getAllBooks()
@@ -139,18 +171,20 @@ fun BookCard(book: Book, onClick: () -> Unit) {
             .fillMaxSize(),
         onClick = { onClick() }
     ) {
-        Text(
-            text = book.title,
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(16.dp,16.dp,16.dp,0.dp)
-        )
-        Text(
-            text = book.author,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Start,
-            modifier = Modifier.padding(16.dp)
-        )
+        Column {
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(16.dp,16.dp,16.dp,0.dp)
+            )
+            Text(
+                text = book.author,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }
 

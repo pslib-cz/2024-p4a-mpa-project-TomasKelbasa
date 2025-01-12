@@ -32,6 +32,8 @@ interface BookshelfDao{
     suspend fun deleteBook(book: Book)
     @Delete
     suspend fun deleteCategory(category: Category)
+    @Query("DELETE FROM bookcategorycrossref WHERE categoryId = :categoryId")
+    suspend fun deleteCategoryCrossRefs(categoryId: Long)
     @Query("DELETE FROM bookcategorycrossref WHERE bookId = :bookId AND categoryId = :categoryId")
     suspend fun deleteBookCategoryCrossRef(bookId: Long, categoryId: Long)
 

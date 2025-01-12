@@ -27,6 +27,8 @@
         </activity>
         <activity android:name=".BookDetailActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
         </activity>
+        <activity android:name=".ManageCategoriesActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
+        </activity>
     </application>
 
 </manifest>

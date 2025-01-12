@@ -1,6 +1,8 @@
 package com.example.bookshelf.views
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -66,7 +68,8 @@ fun AddBookScreen(
                 value = description,
                 onValueChange = { description = it },
                 label = { Text("Description (optional)") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 5
             )
             TextField(
                 value = rating,
@@ -78,21 +81,26 @@ fun AddBookScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Text("Categories", style = MaterialTheme.typography.titleMedium)
-            categories.forEach { category ->
-                Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = selectedCategories.contains(category.categoryId),
-                        onCheckedChange = { isChecked ->
-                            if (isChecked) {
-                                selectedCategories.add(category.categoryId)
-                            } else {
-                                selectedCategories.remove(category.categoryId)
-                            }
-                        }
-                    )
-                    Text(text = category.name)
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(0.6F)
+            ) {
+                items(categories) { category ->
+                    Row(
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Checkbox(
+                            checked = selectedCategories.contains(category.categoryId),
+                            onCheckedChange = { isChecked ->
+                                if (isChecked) {
+                                    selectedCategories.add(category.categoryId)
+                                } else {
+                                    selectedCategories.remove(category.categoryId)
+                                }
+                            },
+                        )
+                        Text(text = category.name)
+                    }
                 }
             }
             Button(
