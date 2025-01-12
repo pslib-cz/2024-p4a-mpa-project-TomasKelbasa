@@ -29,6 +29,8 @@
         </activity>
         <activity android:name=".ManageCategoriesActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
         </activity>
+        <activity android:name=".EditBookActivity" android:exported="true" android:theme="@style/Theme.Bookshelf">
+        </activity>
     </application>
 
 </manifest>

@@ -9,16 +9,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.bookshelf.data.BookWithCategories
-import com.example.bookshelf.data.BookshelfDatabase
 import com.example.bookshelf.ui.theme.BookshelfTheme
 import com.example.bookshelf.viewmodels.BookDetailViewModel
 import com.example.bookshelf.views.BookDetailScreen
@@ -51,7 +46,7 @@ class BookDetailActivity : ComponentActivity() {
                             book = book.value!!,
                             modifier = Modifier.padding(padding),
                             onDeleteBookClick = { bookWithCategories -> deleteBookAndFinish(bookWithCategories)},
-                            onEditBookClick = {}
+                            onEditBookClick = { bookWithCategories ->  editBook(bookWithCategories.book.bookId) }
                         )
                     }
                     else{
@@ -62,11 +57,25 @@ class BookDetailActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val bookId = intent.getLongExtra(BOOK_ID_EXTRA, -1L)
+        if (bookId != -1L) {
+            viewModel.loadBookDetails(bookId)
+        }
+    }
+
     private fun deleteBookAndFinish(book: BookWithCategories) {
         lifecycleScope.launch {
             viewModel.deleteBook(book.book)
             Toast.makeText(this@BookDetailActivity, "Book deleted", Toast.LENGTH_SHORT).show()
             finish() // Return to the previous screen
+        }
+    }
+
+    private fun editBook(bookId: Long) {
+        lifecycleScope.launch {
+            startActivity(EditBookActivity.newIntent(this@BookDetailActivity, bookId))
         }
     }
 

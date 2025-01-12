@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 interface BookshelfDao{
     @Query("SELECT * FROM books")
     suspend fun getAllBooks(): List<Book>
-    @Query("SELECT * FROM books")
-    fun getAllBooksFlow(): Flow<List<Book>>
     @Query("SELECT * FROM categories")
     suspend fun getAllCategories(): List<Category>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -34,6 +32,8 @@ interface BookshelfDao{
     suspend fun deleteCategory(category: Category)
     @Query("DELETE FROM bookcategorycrossref WHERE categoryId = :categoryId")
     suspend fun deleteCategoryCrossRefs(categoryId: Long)
+    @Query("DELETE FROM bookcategorycrossref WHERE bookId = :bookId")
+    suspend fun deleteBookCrossRefs(bookId: Long)
     @Query("DELETE FROM bookcategorycrossref WHERE bookId = :bookId AND categoryId = :categoryId")
     suspend fun deleteBookCategoryCrossRef(bookId: Long, categoryId: Long)
 
